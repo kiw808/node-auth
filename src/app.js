@@ -1,6 +1,7 @@
 require("dotenv").config();
 require("./config/database").connect();
 const express = require("express");
+const auth = require("./middleware/auth");
 const User = require("./model/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -11,6 +12,10 @@ const app = express();
 app.use(express.json());
 
 // Routes
+app.get("/welcome", auth, (req, res) => {
+  res.status(200).send("Welcome to my app !");
+});
+
 app.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
