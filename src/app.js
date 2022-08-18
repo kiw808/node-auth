@@ -2,6 +2,7 @@ require("dotenv").config();
 require("./config/database").connect();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const auth = require("./middleware/auth");
 const User = require("./model/user");
 const bcrypt = require("bcryptjs");
@@ -10,12 +11,17 @@ const jwt = require("jsonwebtoken");
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 
 // Routes
 app.get("/welcome", auth, (req, res) => {
-  res.status(200).send("Welcome to my app !");
+  res.status(200).send("Welcome to my app !!");
 });
 
 app.post("/register", async (req, res) => {
@@ -79,7 +85,18 @@ app.post("/login", async (req, res) => {
 
       user.token = token;
 
-      return res.status(200).json(user);
+      const cookieOptions = {
+        httpOnly: true,
+        domain: "localhost",
+        path: "/",
+        sameSite: "strict",
+        secure: false,
+      };
+
+      return res
+        .status(200)
+        .cookie("accessToken", token, cookieOptions)
+        .json(user);
     }
 
     return res.status(400).send("Invalid credentials");
