@@ -24,6 +24,12 @@ app.get("/welcome", auth, (req, res) => {
   res.status(200).send("Welcome to my app !!");
 });
 
+app.get("/me", auth, async (req, res) => {
+  const currentUser = await User.findById(req.user.user_id);
+
+  res.status(200).json(currentUser);
+});
+
 app.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
