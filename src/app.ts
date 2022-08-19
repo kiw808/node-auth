@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import connectDb from "./config/database";
+import userRoutes from "./routes/user";
 
 connectDb();
 
@@ -12,6 +13,8 @@ app.use(express.json());
 app.get("/api/hello", (req: Request, res: Response) => {
   res.status(200).send("Hello there !");
 });
+
+app.use("/api/user", userRoutes);
 
 app.use("*", (req: Request, res: Response) => {
   res.status(404).json({
