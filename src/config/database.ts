@@ -1,10 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import config from "./config";
 
-const { MONGO_URI } = process.env;
-
-exports.connect = () => {
+export default function connectDb() {
   mongoose
-    .connect(MONGO_URI)
+    .connect(config.database.uri)
     .then(() => {
       console.log("Successfully connected to database");
     })
@@ -13,4 +12,4 @@ exports.connect = () => {
       console.error(error);
       process.exit(1);
     });
-};
+}
