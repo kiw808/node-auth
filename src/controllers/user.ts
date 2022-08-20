@@ -1,8 +1,8 @@
-import User from "../model/user";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import config from "../config/config";
+import userService from "../services/user";
 
 const register = async (req: Request, res: Response) => {
   try {
@@ -12,7 +12,7 @@ const register = async (req: Request, res: Response) => {
       res.status(400).send("All inputs are required");
     }
 
-    const oldUser = await User.findOne({ email });
+    const oldUser = await userService.findByEmail(email);
 
     if (oldUser) {
       return res.status(409).send("User already exists. Please log in");
@@ -20,11 +20,11 @@ const register = async (req: Request, res: Response) => {
 
     const encryptedUserPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      first_name: firstName,
-      last_name: lastName,
-      email: email.toLowerCase(),
-      password: encryptedUserPassword,
+    const user = await userService.create({
+      firstName,
+      lastName,
+      email,
+      encryptedUserPassword,
     });
 
     const token = jwt.sign(
@@ -59,7 +59,7 @@ const login = async (req: Request, res: Response) => {
       res.status(400).send("All inputs are required");
     }
 
-    const user = await User.findOne({ email });
+    const user = await userService.findByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
@@ -91,17 +91,13 @@ const login = async (req: Request, res: Response) => {
 };
 
 const me = async (req: Request, res: Response) => {
-  const currentUser = await User.findById(res.locals.jwt.user_id).select([
-    "first_name",
-    "last_name",
-    "email",
-  ]);
+  const currentUser = await userService.findById(res.locals.jwt.user_id);
 
   res.status(200).json(currentUser);
 };
 
 const getAllUsers = async (req: Request, res: Response) => {
-  const users = await User.find().select(["first_name", "last_name", "email"]);
+  const users = await userService.findAll();
 
   res.status(200).json(users);
 };
