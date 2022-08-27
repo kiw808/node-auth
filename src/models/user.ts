@@ -5,7 +5,7 @@ interface IUser extends Document {
   last_name: string;
   email: string;
   password: string;
-  token?: string;
+  accessToken?: string;
 }
 
 const UserSchema: Schema = new mongoose.Schema({
@@ -13,7 +13,7 @@ const UserSchema: Schema = new mongoose.Schema({
   last_name: { type: String },
   email: { type: String, unique: true },
   password: { type: String },
-  token: { type: String },
+  accessToken: { type: String },
 });
 
 export default mongoose.model<IUser>("User", UserSchema);

@@ -2,13 +2,19 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import connectDb from "./config/database";
 import userRoutes from "./routes/user";
+import cookieParser from "cookie-parser";
 
 connectDb();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/api/hello", (req: Request, res: Response) => {
   res.status(200).send("Hello there !");
