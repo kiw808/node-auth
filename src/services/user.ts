@@ -1,13 +1,7 @@
 import User from "../models/user";
+import { TUser } from "../types/user";
 
-type TypeUser = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  encryptedUserPassword: string;
-};
-
-async function create(user: TypeUser) {
+async function create(user: TUser) {
   return await User.create({
     first_name: user.firstName,
     last_name: user.lastName,

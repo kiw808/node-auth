@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const MONGO_USER = process.env.MONGO_USER || ""
-const MONGO_PASSWORD = process.env.MONGO_PASSWORD || ""
-const MONGO_DATABASE = process.env.MONGO_DATABASE || ""
+const MONGO_USER = process.env.MONGO_USER || "";
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD || "";
+const MONGO_DATABASE = process.env.MONGO_DATABASE || "";
 
 const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@127.0.0.1:27017/${MONGO_DATABASE}`;
 
@@ -20,7 +20,7 @@ const config = {
     port: SERVER_PORT,
   },
   auth: {
-    tokenKey: TOKEN_SECRET,
+    tokenSecret: TOKEN_SECRET,
   },
 };
 
